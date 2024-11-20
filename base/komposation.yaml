@@ -1,0 +1,4 @@
+---
+resources:
+- docker-compose-pg.yaml
+- docker-compose-traefik.yaml
