@@ -1,4 +1,18 @@
 ---
 resources:
-- docker-compose-pg.yaml
-- docker-compose-traefik.yaml
+  - docker-compose-pg.yml
+  - docker-compose-traefik.yml
+namePrefix: ggg-
+nameSufix: -veer
+patches:
+  - paths: test.yml
+  - target:
+      group: helm.toolkit.fluxcd.io
+      version: v2
+      kind: HelmRelease
+      name: hydra
+    patch: |-
+      - op: replace
+        path: /spec/values/deployment/resources/requests/cpu
+        value: 5m
+

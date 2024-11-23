@@ -1,0 +1,15 @@
+---
+resources:
+  - ../base
+
+namePrefix: dev-
+nameSufix: -test
+
+patches:
+  - paths: test.yml
+  - target:
+      serviceName: HelmRelease
+    patch: |-
+      - op: replace
+        path: /spec/values/deployment/resources/requests/cpu
+        value: 5m
