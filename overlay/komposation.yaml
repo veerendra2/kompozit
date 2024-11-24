@@ -5,11 +5,12 @@ resources:
 namePrefix: dev-
 nameSufix: -test
 
-patches:
-  - paths: test.yml
-  - target:
-      serviceName: HelmRelease
-    patch: |-
+patchesStrategicMerge:
+  - path: test.yml
+  - path: docker-compose-pg-patch.yml
+
+patchesJSON6902:
+  - patch:
       - op: replace
-        path: /spec/values/deployment/resources/requests/cpu
-        value: 5m
+        path: /services/traefik/image
+        value: "traefik:v2"

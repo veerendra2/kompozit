@@ -1,0 +1,6 @@
+volumes:
+  acme:
+services:
+  postgres:
+    volumes:
+      - acme:/var/lib/postgresql/data:rw
