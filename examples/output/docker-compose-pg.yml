@@ -11,6 +11,8 @@ services:
     - traefik.enable=false
     networks:
     - db
-    restart: unless-stopped
+    restart: always
     volumes:
-    - /home/veerendra/volumes/postgres:/var/lib/postgresql/data:rw
+    - acme:/var/lib/postgresql/data:rw
+volumes:
+  acme: null

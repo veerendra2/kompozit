@@ -4,3 +4,4 @@ services:
   postgres:
     volumes:
       - acme:/var/lib/postgresql/data:rw
+    restart: always

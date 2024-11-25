@@ -1,21 +1,54 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import json
+import argparse
 import os
+import sys
 
 import jsonpatch
 import yaml
-from deepmerge import Merger, always_merger
+from deepmerge import Merger
 from jsonpatch import JsonPatchConflict
 from jsonpointer import JsonPointerException
 
-CONFIG_FILE_NAMES = ["komposation.yaml", "komposation.yml"]
+CONFIG_FILE_NAMES = ["komposition.yaml", "komposition.yml"]
+CUSTOM_MERGER = Merger(
+    [(list, "override"), (dict, "merge")],
+    ["override"],
+    ["override"],
+)
 
 
-def find_config_file(kom_path):
+def parse_arguments():
+    """Argument parser"""
+    parser = argparse.ArgumentParser(
+        description="Declarative Configuration Management Tool for Docker Compose.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+
+    parser.add_argument(
+        "-b",
+        "--build",
+        default=".",
+        dest="build_path",
+        type=str,
+        required=False,
+        help="Path to a directory containing 'komposition.yaml'.",
+    )
+    parser.add_argument(
+        "-o",
+        "--output-dir",
+        type=str,
+        required=False,
+        help="Directory to save the generated Docker Compose files.",
+    )
+
+    return parser.parse_args()
+
+
+def find_config_file(overlay_path):
     for file_name in CONFIG_FILE_NAMES:
-        file_path = os.path.join(kom_path, file_name)
+        file_path = os.path.join(overlay_path, file_name)
         if os.path.isfile(file_path):
             return file_name
     raise FileNotFoundError("No valid configuration file (.yaml or .yml) found.")
@@ -27,26 +60,16 @@ def load_yaml(file_path):
         return yaml.safe_load(file)
 
 
-# Define custom merge strategy to overwrite arrays
-custom_merger = Merger(
-    [(list, "override"), (dict, "merge")],  # Overwrite lists, merge dictionaries
-    ["override"],  # Fallback to overriding
-    ["override"],  # Default strategy
-)
+def get_paths(overlay_path):
+    config_file_name = find_config_file(overlay_path)
+    overlay = load_yaml(os.path.join(overlay_path, config_file_name))
 
-
-def get_paths(kom_path):
-    """Recursively get all absolute resource paths and update patches paths."""
-    config_file_name = find_config_file(kom_path)
-    overlay = load_yaml(os.path.join(kom_path, config_file_name))
-
-    # Process resources and resolve absolute paths
     resolved_resources = []
     resolved_patches_strategic_merges = []
     merged_patches = overlay.get("patchesJSON6902", []).copy()
 
     for resource in overlay.get("resources", []):
-        resource_path = os.path.abspath(os.path.join(kom_path, resource))
+        resource_path = os.path.abspath(os.path.join(overlay_path, resource))
         if os.path.isdir(resource_path):
             base = get_paths(resource_path)
             resolved_resources.extend(base["resources"])
@@ -59,10 +82,10 @@ def get_paths(kom_path):
             resolved_resources.append(resource_path)
 
     for patch in overlay.get("patchesStrategicMerge", []):
-        patch_path = os.path.abspath(os.path.join(kom_path, patch["path"]))
+        patch_path = os.path.abspath(os.path.join(overlay_path, patch["path"]))
         resolved_patches_strategic_merges.append({"path": patch_path})
 
-    # Replace resources and patches with resolved ones
+    # Replace resources with resolved ones
     overlay["resources"] = resolved_resources
     overlay["patchesStrategicMerge"] = resolved_patches_strategic_merges
     overlay["patchesJSON6902"] = merged_patches
@@ -70,49 +93,45 @@ def get_paths(kom_path):
 
 
 def apply_patches(config, output_dir):
-    os.makedirs(output_dir, exist_ok=True)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
 
     resources = config.get("resources", [])
     json_patches = config.get("patchesJSON6902", [])
     patches_strategic_merge = config.get("patchesStrategicMerge", [])
 
     for resource in resources:
-        with open(resource, "r") as file:
-            resource_data = yaml.safe_load(file)
+        resource_data = load_yaml(resource)
 
+        # patchesJSON6902
         for patch in json_patches:
             try:
                 patch_obj = jsonpatch.JsonPatch(patch["patch"])
                 resource_data = patch_obj.apply(resource_data)
             except (JsonPointerException, JsonPatchConflict):
-                # Ignore patches that can't be applied
                 continue
 
-        # Write the patched resource to a new file
-        output_file = os.path.join(output_dir, os.path.basename(resource))
-        with open(output_file, "w") as file:
-            yaml.dump(resource_data, file, indent=2)
+        # patchesStrategicMerge
+        for patch in patches_strategic_merge:
+            patch_base_file = os.path.splitext(os.path.basename(patch["path"]))[0]
+            resource_base_file = os.path.splitext(os.path.basename(resource))[0]
+            if resource_base_file == patch_base_file.replace("-patch", ""):
+                patch_data = load_yaml(patch["path"])
+                resource_data = CUSTOM_MERGER.merge(resource_data, patch_data)
 
-        for paths in patches_strategic_merge:
-
-            if "paths" in patch:
-                # Handle strategic merge patches from files
-                patch_file = os.path.abspath(patch["paths"])
-                if not os.path.isfile(patch_file):
-                    continue
-
-                with open(patch_file, "r") as patch_file_obj:
-                    patch_data = yaml.safe_load(patch_file_obj)
-
-                # Perform a strategic merge with custom merger
-                resource_data = custom_merger.merge(resource_data, patch_data)
+        if output_dir:
+            output_file = os.path.join(output_dir, os.path.basename(resource))
+            with open(output_file, "w") as file:
+                yaml.dump(resource_data, file, indent=2)
+        else:
+            print("---")
+            yaml.dump(resource_data, stream=sys.stdout, indent=2)
 
 
 def main():
-    s = get_paths("overlay")
-    # print(yaml.dump(s, indent=2))
-    # build(s)
-    apply_patches(s, "output")
+    args = parse_arguments()
+    resolved_komposition = get_paths(args.build_path)
+    apply_patches(resolved_komposition, args.output_dir)
 
 
 if __name__ == "__main__":
