@@ -1,6 +1,7 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+"""
+Kompozit
+"""
 import argparse
 import os
 import sys
@@ -11,7 +12,10 @@ from deepmerge import Merger
 from jsonpatch import JsonPatchConflict
 from jsonpointer import JsonPointerException
 
-CONFIG_FILE_NAMES = ["komposition.yaml", "komposition.yml"]
+__version__ = "0.1.0-beta"
+
+
+CONFIG_FILE_NAMES = ["kompozition.yaml", "kompozition.yml"]
 CUSTOM_MERGER = Merger(
     [(list, "override"), (dict, "merge")],
     ["override"],
@@ -42,25 +46,36 @@ def parse_arguments():
         required=False,
         help="Directory to save the generated Docker Compose files.",
     )
-
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="version",
+        version=f"%(prog)s v{__version__}",
+        help="Show kompozit version",
+    )
     return parser.parse_args()
 
 
 def find_config_file(overlay_path):
+    """Find kompozition file"""
     for file_name in CONFIG_FILE_NAMES:
         file_path = os.path.join(overlay_path, file_name)
         if os.path.isfile(file_path):
             return file_name
-    raise FileNotFoundError("No valid configuration file (.yaml or .yml) found.")
+    raise FileNotFoundError(
+        "Unable to find one of 'kompozition.yaml' or 'kompozition.yml'"
+        + f" in directory {os.path.abspath(overlay_path)}"
+    )
 
 
 def load_yaml(file_path):
-    """Load YAML file."""
-    with open(file_path, "r") as file:
+    """Load YAML file"""
+    with open(file_path, encoding="utf-8") as file:
         return yaml.safe_load(file)
 
 
-def get_paths(overlay_path):
+def resolve_paths(overlay_path):
+    """Resolve absloute paths of resources and patch files"""
     config_file_name = find_config_file(overlay_path)
     overlay = load_yaml(os.path.join(overlay_path, config_file_name))
 
@@ -71,7 +86,7 @@ def get_paths(overlay_path):
     for resource in overlay.get("resources", []):
         resource_path = os.path.abspath(os.path.join(overlay_path, resource))
         if os.path.isdir(resource_path):
-            base = get_paths(resource_path)
+            base = resolve_paths(resource_path)
             resolved_resources.extend(base["resources"])
             resolved_patches_strategic_merges.extend(
                 base.get("patchesStrategicMerge", [])
@@ -93,6 +108,7 @@ def get_paths(overlay_path):
 
 
 def apply_patches(config, output_dir):
+    """Apply patches to resources"""
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
 
@@ -121,18 +137,15 @@ def apply_patches(config, output_dir):
 
         if output_dir:
             output_file = os.path.join(output_dir, os.path.basename(resource))
-            with open(output_file, "w") as file:
+            with open(output_file, encoding="utf-8" "w") as file:
                 yaml.dump(resource_data, file, indent=2)
         else:
             print("---")
-            yaml.dump(resource_data, stream=sys.stdout, indent=2)
+            yaml.dump(resource_data, stream=sys.stdout, indent=2, default_flow_style=False)
 
 
 def main():
+    """Main function"""
     args = parse_arguments()
-    resolved_komposition = get_paths(args.build_path)
+    resolved_komposition = resolve_paths(args.build_path)
     apply_patches(resolved_komposition, args.output_dir)
-
-
-if __name__ == "__main__":
-    main()

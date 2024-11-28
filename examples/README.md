@@ -1,7 +1,8 @@
 # Example
 
 ```bash
-$ ./kompose.py -b examples/overlay/
+$ python3 -m pip install kompozit
+$ kompozit -b examples/overlay/
 ---
 networks:
   db:
