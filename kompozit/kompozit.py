@@ -141,7 +141,9 @@ def apply_patches(config, output_dir):
                 yaml.dump(resource_data, file, indent=2)
         else:
             print("---")
-            yaml.dump(resource_data, stream=sys.stdout, indent=2, default_flow_style=False)
+            yaml.dump(
+                resource_data, stream=sys.stdout, indent=2, default_flow_style=False
+            )
 
 
 def main():

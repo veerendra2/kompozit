@@ -30,7 +30,6 @@ jobs:
 
   pytest:
     runs-on: ubuntu-22.04
-    needs: setup-matrix
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -47,12 +46,10 @@ jobs:
           if [ -e setup.py ]; then python3 -m pip install .; fi
           if [ -e requirements.txt ]; then python3 -m pip install -r requirements.txt; fi
           python3 -m pip install pytest pytest-cov
-        working-directory: ${{ matrix.script_dir }}
 
       - name: Build coverage file
         run: |
           pytest --junitxml=/tmp/pytest.xml --cov-report=term-missing:skip-covered --cov=app tests/ | tee /tmp/pytest-coverage.txt
-        working-directory: ${{ matrix.script_dir }}
 
       - name: Pytest coverage comment
         uses: MishaKav/pytest-coverage-comment@main
@@ -67,13 +64,8 @@ jobs:
           unique-id-for-comment: ${{ matrix.script_dir }}
           junitxml-title: JUnit Xml Summary - `${{ matrix.script_dir }}`
 
-  docker-build:
-    runs-on: ubuntu-22.04
-    needs: setup-matrix
-    strategy:
-      fail-fast: false
-      matrix:
-        docker-dir: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
+  test-docker-build:
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
