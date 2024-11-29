@@ -1,0 +1,16 @@
+---
+resources:
+  - ../base
+
+namePrefix: dev-
+nameSufix: -test
+
+patchesStrategicMerge:
+  - path: docker-compose-traefik-patch.yml
+  - path: docker-compose-pg-patch.yml
+
+patchesJSON6902:
+  - patch:
+      - op: replace
+        path: /services/traefik/image
+        value: "traefik:v2"

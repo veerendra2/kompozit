@@ -1,0 +1,4 @@
+services:
+  traefik:
+    command:
+      - NO_COMMAND_TEST

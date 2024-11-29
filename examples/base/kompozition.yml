@@ -1,0 +1,6 @@
+---
+resources:
+  - docker-compose-pg.yml
+  - docker-compose-traefik.yml
+namePrefix: ggg-
+nameSufix: -veer
