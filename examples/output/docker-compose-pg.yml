@@ -1,0 +1,18 @@
+networks:
+  db:
+    attachable: true
+services:
+  postgres:
+    container_name: postgres
+    hostname: postgres
+    image: postgres:14-alpine
+    labels:
+    - com.centurylinklabs.watchtower.enable=false
+    - traefik.enable=false
+    networks:
+    - db
+    restart: always
+    volumes:
+    - acme:/var/lib/postgresql/data:rw
+volumes:
+  acme: null
