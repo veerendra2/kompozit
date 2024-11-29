@@ -5,7 +5,8 @@ on:
     types: [created]
 
 jobs:
-  deploy:
+  publish:
+    name: Publish PyPi
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,7 +27,7 @@ jobs:
           twine upload --repository pypi dist/*
 
   docker-build:
-    name: Docker Build
+    name: Docker Build & Push
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Code

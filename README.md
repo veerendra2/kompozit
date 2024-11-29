@@ -1,17 +1,28 @@
+![Docker Pulls](https://img.shields.io/docker/pulls/veerendra2/kompozit) ![PyPI - Status](https://img.shields.io/pypi/status/kompozit) ![PyPI - Version](https://img.shields.io/pypi/v/kompozit)
+
+[![Release](https://github.com/veerendra2/kompozit/actions/workflows/release.yml/badge.svg)](https://github.com/veerendra2/kompozit/actions/workflows/release.yml)
+
 # Kompozit
 
-> :construction_worker: This tool is currently in beta and still under development!
+> 🚧 This tool is currently under development!
 
 Declarative Configuration Management Tool for Docker Compose.
 
-_Like [`kustomize`](https://kustomize.io/), but for [Docker Compose](https://docs.docker.com/compose/)._
+_Like [`kustomize.io`](https://kustomize.io/), but for [Docker Compose](https://docs.docker.com/compose/)._
 
-Kompozit provides flexible, declarative overlays to manage complex Docker Compose configurations with support for:
+## Features
 
-- **[`patchesJSON6902`](https://datatracker.ietf.org/doc/html/rfc6902)**: JSON Merge Patch for precise modifications.
-- **[`patchesStrategicMerge`](https://stackoverflow.com/q/71165168/2200798)**: Strategic Merge Patch for hierarchical changes.
+Kompozit simplifies complex Docker Compose setups using declarative overlays, supporting:
 
-## But Why...? :thinking:
+- **[`patchesJSON6902`](https://datatracker.ietf.org/doc/html/rfc6902)**: Precise modifications with JSON Merge Patch.
+- **[`patchesStrategicMerge`](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-api-machinery/strategic-merge-patch.md)**: Flexible hierarchical changes with Strategic Merge Patch.
+
+## Resources
+
+- 📖 [Documentation](https://veerendra2.gitbook.io/kompozit)
+- 🛠️ [Examples](https://github.com/veerendra2/kompozit/tree/main/examples)
+
+## But Why...? 🤔
 
 There are scenarios where you might need different Docker Compose configurations for the same application on different machines.
 
@@ -21,18 +32,14 @@ Additionally, kompozit allows you to combine multiple `docker-compose.yml` files
 
 - For instance, you can keep a generic `docker-compose.yml` for PostgreSQL in a central location and customize it for different stacks in other locations as needed.
 
-## Installation :computer:
+## Installation 💻
+
+### PyPi
+
+> https://pypi.org/project/kompozit/
 
 ```bash
 python -m pip install kompozit
-```
-
-## Usage :gear:
-
-```bash
-git clone git@github.com:veerendra2/kompozit.git
-cd kompozit
-python -m pip install .
 
 kompozit --help
 usage: kompozit [-h] [-b BUILD_PATH] [-o OUTPUT_DIR] [-v]
@@ -46,15 +53,32 @@ options:
   -o, --output-dir OUTPUT_DIR
                         Directory to save the generated Docker Compose files. (default: None)
   -v, --version         Show kompozit version
+```
+
+### Docker
+
+> https://hub.docker.com/r/veerendra2/kompozit
+
+```bash
+docker pull veerendra2/kompozit
+```
+
+## Usage ⚙️
+
+```bash
+git clone git@github.com:veerendra2/kompozit.git
+cd kompozit
+python -m pip install .
 
 kompozit --build ./examples/overlay
+...
 
 # inside docker
 docker pull kompozit:latest
 docker run -it --rm -v ./examples:/examples kompozit:latest -b /examples/overlay
 ```
 
-## Local Development :wrench:
+## Local Development 🔧
 
 ```bash
 git clone git@github.com:veerendra2/kompozit.git

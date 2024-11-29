@@ -3,7 +3,7 @@ resources:
   - ../base
 
 namePrefix: dev-
-nameSufix: -test
+nameSuffix: -test
 
 patchesStrategicMerge:
   - path: docker-compose-traefik-patch.yml
