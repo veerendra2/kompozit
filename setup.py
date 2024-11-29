@@ -2,7 +2,10 @@
 """
 setup.py
 """
+# pylint: disable=C0301
+
 import re
+
 from setuptools import find_packages, setup
 
 with open("kompozit/kompozit.py", "r", encoding="utf-8") as file:
