@@ -9,7 +9,7 @@ from setuptools import find_packages, setup
 
 with open("kompozit/kompozit.py", "r", encoding="utf-8") as file:
     REGEX_VERSION = r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]'
-    version = re.search(REGEX_VERSION, file.read(), re.MULTILINE).group(1)  # type: ignore[union-attr]
+    version = re.search(REGEX_VERSION, file.read(), re.MULTILINE).group(1)
 
 with open("README.md", "r", encoding="utf-8") as file:
     readme = file.read()
