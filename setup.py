@@ -2,16 +2,17 @@
 """
 setup.py
 """
+# pylint: disable=C0301
 
 import re
 
 from setuptools import find_packages, setup
 
-with open("kompozit/kompozit.py", "r", encoding="utf-8") as file:
+with open("kompozit/kompozit.py", encoding="utf-8") as file:
     REGEX_VERSION = r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]'
-    version = re.search(REGEX_VERSION, file.read(), re.MULTILINE).group(1)
+    version = re.search(REGEX_VERSION, file.read(), re.MULTILINE).group(1)  # type: ignore[union-attr]
 
-with open("README.md", "r", encoding="utf-8") as file:
+with open("README.md", encoding="utf-8") as file:
     readme = file.read()
 
 setup(
