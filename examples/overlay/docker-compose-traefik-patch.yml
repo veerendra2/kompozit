@@ -1,4 +1,4 @@
 services:
   traefik:
     command:
-      - NO_COMMAND_TEST
+      - "--log.level=DEBUG"

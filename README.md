@@ -1,8 +1,6 @@
-![Docker Pulls](https://img.shields.io/docker/pulls/veerendra2/kompozit) ![PyPI - Status](https://img.shields.io/pypi/status/kompozit) ![PyPI - Version](https://img.shields.io/pypi/v/kompozit)
-
-[![Release](https://github.com/veerendra2/kompozit/actions/workflows/release.yml/badge.svg)](https://github.com/veerendra2/kompozit/actions/workflows/release.yml)
-
 # Kompozit
+
+![Docker Pulls](https://img.shields.io/docker/pulls/veerendra2/kompozit) ![PyPI - Status](https://img.shields.io/pypi/status/kompozit) ![PyPI - Version](https://img.shields.io/pypi/v/kompozit) [![Release](https://github.com/veerendra2/kompozit/actions/workflows/release.yml/badge.svg)](https://github.com/veerendra2/kompozit/actions/workflows/release.yml)
 
 > 🚧 This tool is currently under development!
 
@@ -36,7 +34,7 @@ Additionally, kompozit allows you to combine multiple `docker-compose.yml` files
 
 ### PyPi
 
-> https://pypi.org/project/kompozit/
+> [https://pypi.org/project/kompozit/](https://pypi.org/project/kompozit/)
 
 ```bash
 python -m pip install kompozit
@@ -57,7 +55,7 @@ options:
 
 ### Docker
 
-> https://hub.docker.com/r/veerendra2/kompozit
+> [https://hub.docker.com/r/veerendra2/kompozit](https://hub.docker.com/r/veerendra2/kompozit)
 
 ```bash
 docker pull veerendra2/kompozit

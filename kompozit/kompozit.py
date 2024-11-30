@@ -125,8 +125,7 @@ def apply_patches(config, output_dir):
         # patchesJSON6902
         for patch in json_patches:
             try:
-                patch_obj = jsonpatch.JsonPatch(patch["patch"])
-                resource_data = patch_obj.apply(resource_data)
+                resource_data = jsonpatch.JsonPatch(patch["patch"]).apply(resource_data)
             except (JsonPointerException, JsonPatchConflict):
                 continue
 
@@ -135,8 +134,9 @@ def apply_patches(config, output_dir):
             patch_base_file = os.path.splitext(os.path.basename(patch["path"]))[0]
             resource_base_file = os.path.splitext(os.path.basename(resource))[0]
             if resource_base_file == patch_base_file.replace("-patch", ""):
-                patch_data = load_yaml(patch["path"])
-                resource_data = CUSTOM_MERGER.merge(resource_data, patch_data)
+                resource_data = CUSTOM_MERGER.merge(
+                    resource_data, load_yaml(patch["path"])
+                )
 
         # update namePrefix and nameSufix
         for svc in resource_data["services"].copy():
