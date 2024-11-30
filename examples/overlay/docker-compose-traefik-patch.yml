@@ -1,4 +1,0 @@
-services:
-  traefik:
-    command:
-      - "--log.level=DEBUG"

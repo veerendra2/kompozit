@@ -8,6 +8,10 @@ Declarative Configuration Management Tool for Docker Compose.
 
 _Like [`kustomize.io`](https://kustomize.io/), but for [Docker Compose](https://docs.docker.com/compose/)._
 
+<center>
+  <img src="https://i.postimg.cc/cH1dYN6f/komposeit.png" alt="Kompozit" width="150"/>
+</center>
+
 ## Features
 
 Kompozit simplifies complex Docker Compose setups using declarative overlays, supporting:
