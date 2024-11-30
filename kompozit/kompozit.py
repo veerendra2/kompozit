@@ -12,7 +12,7 @@ from deepmerge import Merger
 from jsonpatch import JsonPatchConflict
 from jsonpointer import JsonPointerException
 
-__version__ = "0.1.0-beta"
+__version__ = "0.2.0-beta"
 
 
 CONFIG_FILE_NAMES = ["kompozition.yaml", "kompozition.yml"]
@@ -109,12 +109,15 @@ def resolve_paths(overlay_path):
 
 def apply_patches(config, output_dir):
     """Apply patches to resources"""
-    if output_dir:
-        os.makedirs(output_dir, exist_ok=True)
-
     resources = config.get("resources", [])
     json_patches = config.get("patchesJSON6902", [])
     patches_strategic_merge = config.get("patchesStrategicMerge", [])
+    yaml_dump_kwargs = {
+        "indent": 2,
+        "explicit_start": True,
+        "encoding": "utf-8",
+        "sort_keys": False,
+    }
 
     for resource in resources:
         resource_data = load_yaml(resource)
@@ -122,8 +125,7 @@ def apply_patches(config, output_dir):
         # patchesJSON6902
         for patch in json_patches:
             try:
-                patch_obj = jsonpatch.JsonPatch(patch["patch"])
-                resource_data = patch_obj.apply(resource_data)
+                resource_data = jsonpatch.JsonPatch(patch["patch"]).apply(resource_data)
             except (JsonPointerException, JsonPatchConflict):
                 continue
 
@@ -132,18 +134,22 @@ def apply_patches(config, output_dir):
             patch_base_file = os.path.splitext(os.path.basename(patch["path"]))[0]
             resource_base_file = os.path.splitext(os.path.basename(resource))[0]
             if resource_base_file == patch_base_file.replace("-patch", ""):
-                patch_data = load_yaml(patch["path"])
-                resource_data = CUSTOM_MERGER.merge(resource_data, patch_data)
+                resource_data = CUSTOM_MERGER.merge(
+                    resource_data, load_yaml(patch["path"])
+                )
+
+        # update namePrefix and nameSufix
+        for svc in resource_data["services"].copy():
+            new_svc = config.get("namePrefix", "") + svc + config.get("nameSuffix", "")
+            resource_data["services"][new_svc] = resource_data["services"].pop(svc)
 
         if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
             output_file = os.path.join(output_dir, os.path.basename(resource))
             with open(output_file, encoding="utf-8" "w") as file:
-                yaml.dump(resource_data, file, indent=2)
+                yaml.dump(resource_data, stream=file, **yaml_dump_kwargs)
         else:
-            print("---")
-            yaml.dump(
-                resource_data, stream=sys.stdout, indent=2, default_flow_style=False
-            )
+            yaml.dump(resource_data, stream=sys.stdout, **yaml_dump_kwargs)
 
 
 def main():
