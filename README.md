@@ -1,8 +1,8 @@
 # Kompozit
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/veerendra2/kompozit) ![PyPI - Status](https://img.shields.io/pypi/status/kompozit) ![PyPI - Version](https://img.shields.io/pypi/v/kompozit) [![Release](https://github.com/veerendra2/kompozit/actions/workflows/release.yml/badge.svg)](https://github.com/veerendra2/kompozit/actions/workflows/release.yml)
-
-> 🚧 This tool is currently under development!
+ 
+> ℹ Mostly likely you may want to use [Use multiple Compose files](https://docs.docker.com/compose/how-tos/multiple-compose-files/) in Docker Compose itself. 
 
 Declarative Configuration Management Tool for Docker Compose.
 
