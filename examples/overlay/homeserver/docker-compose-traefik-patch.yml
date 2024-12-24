@@ -1,0 +1,12 @@
+services:
+  traefik:
+    command:
+      - "--log.level=INFO"
+      - "--api.insecure=false"
+      - "--api.dashboard=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+      - "--global.sendAnonymousUsage=false"
+      - "--global.checkNewVersion=false"
+    labels:
+      - com.centurylinklabs.watchtower.enable=true

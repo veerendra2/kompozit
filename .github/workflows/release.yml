@@ -3,6 +3,12 @@ name: Release
 on:
   release:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      blog:
+        description: "Release Manually"
+        required: true
+        default: "yes"
 
 jobs:
   deploy:
@@ -27,7 +33,7 @@ jobs:
           twine upload --repository pypi dist/*
 
   docker-build:
-    name: Docker Build
+    name: Docker Build & Push
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Code
