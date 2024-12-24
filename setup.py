@@ -2,7 +2,6 @@
 """
 setup.py
 """
-# pylint: disable=C0301
 
 import re
 
@@ -30,7 +29,7 @@ setup(
         "Documentation": "https://veerendra2.gitbook.io/kompozit",
     },
     keywords=["gitops", "cicd", "docker-compose", "configuration management"],
-    license="MIT",
+    license="Apache License",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: System Administrators",

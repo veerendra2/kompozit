@@ -11,8 +11,8 @@ on:
         default: "yes"
 
 jobs:
-  publish:
-    name: Publish PyPi
+  deploy:
+    name: Publish to PyPI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

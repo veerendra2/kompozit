@@ -6,9 +6,10 @@ build-backend = "setuptools.build_meta"
 line-length = 88
 
 [tool.pylint.messages_control]
-disable = [
-  "C0301"
-]
+disable = ["C0301", "E0401"]
+
+[tool.isort]
+profile = "black"
 
 [tool.mypy]
 ignore_missing_imports = true
