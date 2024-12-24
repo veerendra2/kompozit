@@ -12,7 +12,7 @@ from deepmerge import Merger
 from jsonpatch import JsonPatchConflict
 from jsonpointer import JsonPointerException
 
-__version__ = "0.2.0-beta"
+__version__ = "0.2.1-beta"
 
 
 CONFIG_FILE_NAMES = ["kompozition.yaml", "kompozition.yml"]
@@ -37,7 +37,7 @@ def parse_arguments():
         dest="build_path",
         type=str,
         required=False,
-        help="Path to a directory containing 'komposition.yaml'.",
+        help="Path to a directory containing 'kompozition.yaml' or 'kompozition.yml'.",
     )
     parser.add_argument(
         "-o",

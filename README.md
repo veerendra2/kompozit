@@ -1,8 +1,8 @@
 # Kompozit
 
-![Docker Pulls](https://img.shields.io/docker/pulls/veerendra2/kompozit) ![PyPI - Status](https://img.shields.io/pypi/status/kompozit) ![PyPI - Version](https://img.shields.io/pypi/v/kompozit) [![Release](https://github.com/veerendra2/kompozit/actions/workflows/release.yml/badge.svg)](https://github.com/veerendra2/kompozit/actions/workflows/release.yml)
- 
-> ℹ Mostly likely you may want to use [Use multiple Compose files](https://docs.docker.com/compose/how-tos/multiple-compose-files/) in Docker Compose itself. 
+[![Docker Pulls](https://img.shields.io/docker/pulls/veerendra2/kompozit)](https://hub.docker.com/r/veerendra2/kompozit) [![PyPI - Status](https://img.shields.io/pypi/status/kompozit)](https://pypi.org/project/kompozit/) [![PyPI - Version](https://img.shields.io/pypi/v/kompozit)](https://pypi.org/project/kompozit/) [![PyPI - Downloads](https://img.shields.io/pypi/dm/kompozit)](https://pypi.org/project/kompozit/) [![Release](https://github.com/veerendra2/kompozit/actions/workflows/release.yml/badge.svg)](https://github.com/veerendra2/kompozit/actions/workflows/release.yml)
+
+> ℹ Mostly likely you may want to use [Use multiple Compose files](https://docs.docker.com/compose/how-tos/multiple-compose-files/) in Docker Compose itself.
 
 Declarative Configuration Management Tool for Docker Compose.
 
@@ -43,7 +43,7 @@ Additionally, kompozit allows you to combine multiple `docker-compose.yml` files
 ```bash
 python -m pip install kompozit
 
-kompozit --help
+kompozit -h
 usage: kompozit [-h] [-b BUILD_PATH] [-o OUTPUT_DIR] [-v]
 
 Declarative Configuration Management Tool for Docker Compose.
@@ -51,7 +51,7 @@ Declarative Configuration Management Tool for Docker Compose.
 options:
   -h, --help            show this help message and exit
   -b, --build BUILD_PATH
-                        Path to a directory containing 'komposition.yaml'. (default: .)
+                        Path to a directory containing 'kompozition.yaml' or 'kompozition.yml'. (default: .)
   -o, --output-dir OUTPUT_DIR
                         Directory to save the generated Docker Compose files. (default: None)
   -v, --version         Show kompozit version
@@ -65,7 +65,7 @@ options:
 docker pull veerendra2/kompozit
 ```
 
-## Usage ⚙️
+## Usage Examples ⚙️
 
 ```bash
 git clone git@github.com:veerendra2/kompozit.git
