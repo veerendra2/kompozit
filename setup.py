@@ -49,7 +49,7 @@ setup(
     install_requires=[
         "deepmerge==2.0",
         "jsonpatch==1.33",
-        "PyYAML==6.0.2",
+        "PyYAML==6.0.3",
     ],
     python_requires=">=3.9",
     entry_points={"console_scripts": ["kompozit = kompozit.kompozit:main"]},
